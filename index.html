@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klik!</title>
+    
+    <!-- “Software ini bebas dipakai untuk disebarkan, dengan atau tanpa modifikasi, pada medium apapun tanpa perlu permisi sepanjang catatan ini turut disertakan.”
+    oleh: Bangkit I.D. 20240808 -->
+	
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #FFC0CB; 
+            overflow: hidden; 
+        }
+        #word {
+            font-size: 2em;
+            cursor: pointer;
+            position: absolute;
+        }
+        .poem {
+            font-size: 1.5em;
+            position: absolute;
+            opacity: 0;
+            animation: move 5s linear infinite;
+        }
+        @keyframes move {
+            0% { top: 0; }
+            100% { top: calc(100vh - 2em); }
+        }
+    </style>
+</head>
+<body>
+    <div id="word">Klik!</div>
+    <div id="poem1" class="poem"></div>
+    <div id="poem2" class="poem"></div>
+    <div id="poem3" class="poem"></div>
+
+    <script>
+        const words = ["Klik!", "Klik!", "Atas", "Kiri", "Bawah", "Kanan", "Klik!", "Klik!", "Klik!", "Klik!", "Di sini!", "Di sini!", "Di sini!", "Klik!", "Kita", "Main", "Klik!", "Di sini!", "Puisi", "Klik!", "Digital", "Klik!", "Ingin", "Klik!", "Terus", "Klik!", "Main", "Klik!", "Denganmu"];
+        const poem = ["estetika", "puisi", "digital", "jari manis", "makna siang", "biner bilang", "cyberXcross", "magicaly dumb", "prompt", "logic machine", "get.random", "fungsi", "if else", "let", "kopi pasta", "qwerty", "little i see", "i-literasi", "virtual beauty", "filter kamera", "Artificial Intelegence", "Natural Stupidity", "animasi keren"];
+        const fonts = ["Arial, sans-serif", "Georgia, serif", "Courier New, monospace", "Tahoma, sans-serif", "Verdana, sans-serif"];
+        
+        let currentIndex = 0;
+        let lastFontIndex = -1;
+
+        const positions = [
+            { left: '0', top: '0' }, 
+            { left: '50%', top: '0', transform: 'translateX(-50%)' }, 
+            { left: '100%', top: '0', transform: 'translateX(-100%)' }
+        ];
+        const poemElements = [document.getElementById('poem1'), document.getElementById('poem2'), document.getElementById('poem3')];
+
+        function startPoemAnimation() {
+            poemElements.forEach((elem, index) => {
+                elem.style.animationPlayState = 'running'; 
+                elem.addEventListener('animationiteration', () => {
+                    elem.textContent = poem[Math.floor(Math.random() * poem.length)];
+                    const randomDuration = Math.random() * 4 + 3;
+                    elem.style.animationDuration = `${randomDuration}s`;
+                });
+            });
+        }
+
+        poemElements.forEach((elem, index) => {
+            elem.style.animationPlayState = 'paused'; // Menunda animasi
+            elem.textContent = poem[index % poem.length];
+            Object.assign(elem.style, positions[index]);
+            elem.style.opacity = 0;
+        });
+
+        document.getElementById("word").addEventListener("click", () => {
+            document.getElementById("word").textContent = words[currentIndex];
+            currentIndex = (currentIndex + 1) % words.length;
+
+            let randomFontIndex;
+            do {
+                randomFontIndex = Math.floor(Math.random() * fonts.length);
+            } while (randomFontIndex === lastFontIndex);
+
+            document.getElementById("word").style.fontFamily = fonts[randomFontIndex];
+            lastFontIndex = randomFontIndex;
+
+            const wordElement = document.getElementById("word");
+            const maxX = window.innerWidth - wordElement.offsetWidth;
+            const maxY = window.innerHeight - wordElement.offsetHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            wordElement.style.left = randomX + 'px';
+            wordElement.style.top = randomY + 'px';
+
+            poemElements.forEach(elem => elem.style.opacity = 1);
+            startPoemAnimation();
+        });
+    </script>
+</body>
+</html>
